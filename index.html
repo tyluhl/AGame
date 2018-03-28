@@ -15,19 +15,29 @@
 <script>
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    Player = {
-        rightPressed: false,
-        leftPressed: false,
-        x: Math.round(Math.random() * canvas.width),
-        y: Math.round(Math.random() * canvas.height),
-        health: 100
-    };
 
-    player1 = new Player();
+    var player1 = {};
+    var player2 = {};
+    var player3 = {};
+    var player4 = {};
+
+    var players = [player1, player2, player3, player4];
+
+    for(var i = 0; i < players.length; i++) {
+        players[i]["rightPressed"] = false;
+        players[i]["leftPressed"] = false;
+        players[i]["upPressed"] = false;
+        players[i]["downPressed"] = false;
+        players[i]["x"] = Math.round(Math.random() * canvas.width);
+        players[i]["y"] = Math.round(Math.random() * canvas.height);
+        players[i]["health"] = 100;
+    }
+
+    alert(player1.x);
 
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
-    document.addEventListener("mousemove", mouseMoveHandler, false);
+    //document.addEventListener("mousemove", mouseMoveHandler, false);
 
     function keyDownHandler(e) {
         if (e.keyCode == 39) {
@@ -46,27 +56,27 @@
         }
     }
 
-    function mouseMoveHandler(e) {
+    /*function mouseMoveHandler(e) {
         var relativeX = e.clientX - canvas.offsetLeft;
         if(relativeX > 0 && relativeX < canvas.width) {
             x = relativeX - y/2;
         }
-    }
+    }*/
 
     function drawPlayers() {
         ctx.beginPath();
-        ctx.moveTo(player1.x, player1.y);
-        ctx.fillRect(player1.x, player1.y, player1.x+30, player1.y+100);
+        ctx.rect(player1.x, player1.y, 30, 100);
+        ctx.fill();
+        ctx.closePath();
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawPlayers();
+        drawPaddle();
     }
-        collisionDetection();
 
-
-    draw();
+    setInterval(draw, 10);
 </script>
 
 </body>
