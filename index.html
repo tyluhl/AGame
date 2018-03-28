@@ -33,8 +33,6 @@
         players[i]["health"] = 100;
     }
 
-    alert(player1.x);
-
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     //document.addEventListener("mousemove", mouseMoveHandler, false);
@@ -65,15 +63,35 @@
 
     function drawPlayers() {
         ctx.beginPath();
-        ctx.rect(player1.x, player1.y, 30, 100);
-        ctx.fill();
+        //ctx.rect(player1.x, player1.y, 40, 100);
+        ctx.lineWidth = 3;
+        //for(var i = 0; i < 4; i++) {
+            ctx.moveTo(player1.x + 40, player1.y + 20);
+            ctx.arc(player1.x + 20, player1.y + 20, 20, 0, 2 * Math.PI);
+            ctx.moveTo(player1.x + 16, player1.y + 12);
+            ctx.arc(player1.x + 13, player1.y + 12, 3, 0, 2 * Math.PI);
+            ctx.moveTo(player1.x + 30, player1.y + 12);
+            ctx.arc(player1.x + 27, player1.y + 12, 3, 0, 2 * Math.PI);
+            ctx.moveTo(player1.x + 30, player1.y + 22);
+            ctx.arc(player1.x + 20, player1.y + 22, 10, 0, Math.PI);
+            ctx.moveTo(player1.x + 20, player1.y + 40);
+            ctx.lineTo(player1.x + 20, player1.y + 80);
+            ctx.lineTo(player1.x, player1.y + 100);
+            ctx.moveTo(player1.x + 20, player1.y + 80);
+            ctx.lineTo(player1.x + 40, player1.y + 100);
+            ctx.moveTo(player1.x + 20, player1.y + 60);
+            ctx.lineTo(player1.x, player1.y + 40);
+            ctx.moveTo(player1.x + 20, player1.y + 60);
+            ctx.lineTo(player1.x + 40, player1.y + 40);
+            ctx.stroke();
+        //}
+        //ctx.fill();
         ctx.closePath();
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         drawPlayers();
-        drawPaddle();
     }
 
     setInterval(draw, 10);
