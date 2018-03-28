@@ -39,18 +39,35 @@
 
     function keyDownHandler(e) {
         if (e.keyCode == 68) {
+            player1.leftPressed = false;
             player1.rightPressed = true;
         }
-        else if(e.keyCode == 65) {
+        if(e.keyCode == 65) {
+            player1.rightPressed = false;
             player1.leftPressed = true;
         }
+        if(e.keyCode == 87){
+            player1.downPressed = false;
+            player1.upPressed = true;
+        }
+        if(e.keyCode == 83){
+            player1.upPressed = false;
+            player1.downPressed = true;
+        }
+
     }
     function keyUpHandler(e) {
         if(e.keyCode == 68) {
             player1.rightPressed = false;
         }
-        else if(e.keyCode == 65) {
+        if(e.keyCode == 65) {
             player1.leftPressed = false;
+        }
+        if(e.keyCode == 87){
+            player1.upPressed = false;
+        }
+        if(e.keyCode == 83){
+            player1.downPressed = false;
         }
     }
 
@@ -99,6 +116,12 @@
         }
         if(player1.leftPressed){
             player1.x -= 5;
+        }
+        if(player1.upPressed){
+            player1.y -= 5;
+        }
+        if(player1.downPressed){
+            player1.y += 5;
         }
 
         drawPlayers();
