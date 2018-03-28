@@ -23,6 +23,10 @@
 
     var players = [player1, player2, player3, player4];
 
+    var playerSize = 1;
+    var playerWidth = playerSize*40;
+    var playerHeight = playerSize*100;
+
     for(var i = 0; i < players.length; i++) {
         players[i]["rightPressed"] = false;
         players[i]["leftPressed"] = false;
@@ -39,37 +43,37 @@
     //document.addEventListener("mousemove", mouseMoveHandler, false);
 
     function keyDownHandler(e) {
-        if (e.keyCode == 68) {
+        if (e.keyCode === 68) {
             player1.leftPressed = false;
             player1.rightPressed = true;
             player1.direction = "RIGHT";
         }
-        if(e.keyCode == 65) {
+        if(e.keyCode === 65) {
             player1.rightPressed = false;
             player1.leftPressed = true;
             player1.direction = "LEFT";
         }
-        if(e.keyCode == 87){
+        if(e.keyCode === 87){
             player1.downPressed = false;
             player1.upPressed = true;
         }
-        if(e.keyCode == 83){
+        if(e.keyCode === 83){
             player1.upPressed = false;
             player1.downPressed = true;
         }
 
     }
     function keyUpHandler(e) {
-        if(e.keyCode == 68) {
+        if(e.keyCode === 68) {
             player1.rightPressed = false;
         }
-        if(e.keyCode == 65) {
+        if(e.keyCode === 65) {
             player1.leftPressed = false;
         }
-        if(e.keyCode == 87){
+        if(e.keyCode === 87){
             player1.upPressed = false;
         }
-        if(e.keyCode == 83){
+        if(e.keyCode === 83){
             player1.downPressed = false;
         }
     }
@@ -81,10 +85,18 @@
         }
     }*/
 
+    function drawEnviornment(){
+        ctx.beginPath();
+        ctx.rect(0, canvas.height-5, canvas.width, 5);
+        ctx.rect(0, 0, 5, canvas.height);
+        ctx.rect(canvas.width-5, 0, 5, canvas.height);
+        ctx.rect(0, 0, canvas.width, 5);
+        ctx.fillStyle = "#dd1030";
+        ctx.fill();
+        ctx.closePath();
+    }
+
     function drawPlayers() {
-        var playerSize = 1;
-        var playerWidth = playerSize*40;
-        var playerHeight = playerSize*100;
         ctx.beginPath();
         //ctx.rect(player1.x, player1.y, 40, 100);
         ctx.lineWidth = 3;
@@ -127,8 +139,7 @@
         ctx.closePath();
     }
 
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function playerLocation(){
         if(player1.rightPressed){
             player1.x += 5;
         }
@@ -142,7 +153,29 @@
             player1.y += 5;
         }
 
+        if(player1.x-6<0){
+            player1.x = 6;
+        }
+        if(player1.x+6+playerWidth>canvas.width){
+            player1.x = canvas.width - playerWidth -6;
+        }
+
+        if(player1.y+playerHeight+6>canvas.height){
+            player1.y = canvas.height - playerHeight - 6;
+        }
+
+        if(player1.y-6<0){
+            player1.y = 6;
+        }
+
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        playerLocation();
         drawPlayers();
+        drawEnviornment();
     }
 
     setInterval(draw, 10);
