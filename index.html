@@ -38,18 +38,18 @@
     //document.addEventListener("mousemove", mouseMoveHandler, false);
 
     function keyDownHandler(e) {
-        if (e.keyCode == 39) {
+        if (e.keyCode == 68) {
             player1.rightPressed = true;
         }
-        else if(e.keyCode == 37) {
+        else if(e.keyCode == 65) {
             player1.leftPressed = true;
         }
     }
     function keyUpHandler(e) {
-        if(e.keyCode == 39) {
+        if(e.keyCode == 68) {
             player1.rightPressed = false;
         }
-        else if(e.keyCode == 37) {
+        else if(e.keyCode == 65) {
             player1.leftPressed = false;
         }
     }
@@ -62,7 +62,7 @@
     }*/
 
     function drawPlayers() {
-        var playerSize = 2;
+        var playerSize = 1;
         var playerWidth = playerSize*40;
         var playerHeight = playerSize*100;
         ctx.beginPath();
@@ -94,6 +94,13 @@
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if(player1.rightPressed){
+            player1.x += 5;
+        }
+        if(player1.leftPressed){
+            player1.x -= 5;
+        }
+
         drawPlayers();
     }
 
