@@ -21,6 +21,15 @@
     var leftPressed = false;
     var upPressed = false;
     var downPressed = false;
+    Player = {
+        rightPressed: false,
+        leftPressed: false,
+        x: Math.round(Math.random() * canvas.width),
+        y: Math.round(Math.random() * canvas.height),
+        health: 100
+    };
+
+    player1 = new Player();
 
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
@@ -68,7 +77,7 @@
     }
 
     function mouseMoveHandler(e) {
-        var relativeX = e.clientX - canvas.offsetLweft;
+        var relativeX = e.clientX - canvas.offsetLeft;
         if(relativeX > 0 && relativeX < canvas.width) {
             paddleX = relativeX - paddleWidth/2;
         }
