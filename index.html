@@ -31,6 +31,7 @@
         players[i]["x"] = Math.round(Math.random() * canvas.width);
         players[i]["y"] = Math.round(Math.random() * canvas.height);
         players[i]["health"] = 100;
+        players[i]["direction"] = "CENTER";
     }
 
     document.addEventListener("keydown", keyDownHandler, false);
@@ -40,9 +41,11 @@
     function keyDownHandler(e) {
         if (e.keyCode == 68) {
             player1.rightPressed = true;
+            player1.direction = "RIGHT";
         }
         else if(e.keyCode == 65) {
             player1.leftPressed = true;
+            player1.direction = "LEFT";
         }
     }
     function keyUpHandler(e) {
@@ -71,12 +74,27 @@
         //for(var i = 0; i < 4; i++) {
             ctx.moveTo(player1.x + playerWidth, player1.y + playerHeight/5);
             ctx.arc(player1.x + playerWidth/2, player1.y + playerHeight/5, playerWidth/2, 0, 2 * Math.PI);
-            ctx.moveTo(player1.x + playerWidth*16/40, player1.y + playerHeight*6/50);
-            ctx.arc(player1.x + playerWidth*13/40, player1.y + playerHeight*6/50, playerWidth*3/40, 0, 2 * Math.PI);
-            ctx.moveTo(player1.x + playerWidth*3/4, player1.y + playerHeight*6/50);
-            ctx.arc(player1.x + playerWidth*27/40, player1.y + playerHeight*6/50, playerWidth*3/40, 0, 2 * Math.PI);
-            ctx.moveTo(player1.x + playerWidth*3/4, player1.y + playerHeight*22/100);
-            ctx.arc(player1.x + playerWidth/2, player1.y + playerHeight*22/100, playerWidth/4, 0, Math.PI);
+            if(player1.direction === "CENTER") {
+                ctx.moveTo(player1.x + playerWidth * 16 / 40, player1.y + playerHeight * 6 / 50);
+                ctx.arc(player1.x + playerWidth * 13 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 6 / 50);
+                ctx.arc(player1.x + playerWidth * 27 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 22 / 100);
+                ctx.arc(player1.x + playerWidth / 2, player1.y + playerHeight * 22 / 100, playerWidth / 4, 0, Math.PI);
+            }
+            if(player1.direction === "LEFT") {
+                ctx.moveTo(player1.x + playerWidth * 16 / 40, player1.y + playerHeight * 6 / 50);
+                ctx.arc(player1.x + playerWidth * 13 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(player1.x + playerWidth * 15 / 40, player1.y + playerHeight * 12 / 50);
+                ctx.arc(player1.x + playerWidth * 5 / 40, player1.y + playerHeight * 12 / 50, playerWidth / 4, 0, 0.5 * Math.PI);
+            }
+            if(player1.direction === "RIGHT") {
+                ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 6 / 50);
+                ctx.arc(player1.x + playerWidth * 27 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(player1.x + playerWidth * 25 / 40, player1.y + playerHeight * 12 / 50);
+                ctx.arc(player1.x + playerWidth * 35 / 40, player1.y + playerHeight * 12 / 50, playerWidth / 4, Math.PI, .5 * Math.PI, true);
+            }
+
             ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*2/5);
             ctx.lineTo(player1.x + playerWidth/2, player1.y + playerHeight*4/5);
             ctx.lineTo(player1.x, player1.y + playerHeight);
