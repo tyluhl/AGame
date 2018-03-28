@@ -62,27 +62,30 @@
     }*/
 
     function drawPlayers() {
+        var playerSize = 2;
+        var playerWidth = playerSize*40;
+        var playerHeight = playerSize*100;
         ctx.beginPath();
         //ctx.rect(player1.x, player1.y, 40, 100);
         ctx.lineWidth = 3;
         //for(var i = 0; i < 4; i++) {
-            ctx.moveTo(player1.x + 40, player1.y + 20);
-            ctx.arc(player1.x + 20, player1.y + 20, 20, 0, 2 * Math.PI);
-            ctx.moveTo(player1.x + 16, player1.y + 12);
-            ctx.arc(player1.x + 13, player1.y + 12, 3, 0, 2 * Math.PI);
-            ctx.moveTo(player1.x + 30, player1.y + 12);
-            ctx.arc(player1.x + 27, player1.y + 12, 3, 0, 2 * Math.PI);
-            ctx.moveTo(player1.x + 30, player1.y + 22);
-            ctx.arc(player1.x + 20, player1.y + 22, 10, 0, Math.PI);
-            ctx.moveTo(player1.x + 20, player1.y + 40);
-            ctx.lineTo(player1.x + 20, player1.y + 80);
-            ctx.lineTo(player1.x, player1.y + 100);
-            ctx.moveTo(player1.x + 20, player1.y + 80);
-            ctx.lineTo(player1.x + 40, player1.y + 100);
-            ctx.moveTo(player1.x + 20, player1.y + 60);
-            ctx.lineTo(player1.x, player1.y + 40);
-            ctx.moveTo(player1.x + 20, player1.y + 60);
-            ctx.lineTo(player1.x + 40, player1.y + 40);
+            ctx.moveTo(player1.x + playerWidth, player1.y + playerHeight/5);
+            ctx.arc(player1.x + playerWidth/2, player1.y + playerHeight/5, playerWidth/2, 0, 2 * Math.PI);
+            ctx.moveTo(player1.x + playerWidth*16/40, player1.y + playerHeight*6/50);
+            ctx.arc(player1.x + playerWidth*13/40, player1.y + playerHeight*6/50, playerWidth*3/40, 0, 2 * Math.PI);
+            ctx.moveTo(player1.x + playerWidth*3/4, player1.y + playerHeight*6/50);
+            ctx.arc(player1.x + playerWidth*27/40, player1.y + playerHeight*6/50, playerWidth*3/40, 0, 2 * Math.PI);
+            ctx.moveTo(player1.x + playerWidth*3/4, player1.y + playerHeight*22/100);
+            ctx.arc(player1.x + playerWidth/2, player1.y + playerHeight*22/100, playerWidth/4, 0, Math.PI);
+            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*2/5);
+            ctx.lineTo(player1.x + playerWidth/2, player1.y + playerHeight*4/5);
+            ctx.lineTo(player1.x, player1.y + playerHeight);
+            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*4/5);
+            ctx.lineTo(player1.x + playerWidth, player1.y + playerHeight);
+            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*3/5);
+            ctx.lineTo(player1.x, player1.y + playerHeight*2/5);
+            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*3/5);
+            ctx.lineTo(player1.x + playerWidth, player1.y + playerHeight*2/5);
             ctx.stroke();
         //}
         //ctx.fill();
