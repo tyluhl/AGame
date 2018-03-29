@@ -13,6 +13,7 @@
 <canvas id="myCanvas" width="1200" height="600"></canvas>
 
 <script>
+    // create canvas
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
 
@@ -23,17 +24,19 @@
 
     var players = [player1, player2, player3, player4];
 
+    // var used to create player sprite
     var playerSize = 1;
     var playerWidth = playerSize*40;
     var playerHeight = playerSize*100;
 
-    var gravity = 0.1;
+    // gravity and jump variables
+    var gravity = 0.2;
     var gravitySpeed = 0;
 
-    var jump = 0.3;
-    var jumpSpeed = 0;
+    var jump = 5;
     var canJump = true;
 
+    // appends attributes to each player
     for(var i = 0; i < players.length; i++) {
         players[i]["rightPressed"] = false;
         players[i]["leftPressed"] = false;
@@ -45,11 +48,13 @@
         players[i]["direction"] = "CENTER";
     }
 
+    // allows to take key input
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     //document.addEventListener("mousemove", mouseMoveHandler, false);
 
     function keyDownHandler(e) {
+        // changes appropriate variables in player based on keys pressed
         if (e.keyCode === 68) {
             player1.leftPressed = false;
             player1.rightPressed = true;
@@ -71,6 +76,8 @@
 
     }
     function keyUpHandler(e) {
+        // changes appropriate variables based on keys lifted
+
         if(e.keyCode === 68) {
             player1.rightPressed = false;
         }
@@ -78,6 +85,7 @@
             player1.leftPressed = false;
         }
         if(e.keyCode === 87){
+            canJump = false;
             player1.upPressed = false;
         }
         if(e.keyCode === 83){
@@ -85,6 +93,7 @@
         }
     }
 
+    // function to get mouse input, not used
     /*function mouseMoveHandler(e) {
         var relativeX = e.clientX - canvas.offsetLeft;
         if(relativeX > 0 && relativeX < canvas.width) {
@@ -93,6 +102,7 @@
     }*/
 
     function drawEnviornment(){
+        // draws enviornment, as of now just rectangles around canvas
         ctx.beginPath();
         var ground = ctx.rect(0, canvas.height-5, canvas.width, 5);
         var leftWall = ctx.rect(0, 0, 5, canvas.height);
@@ -107,6 +117,8 @@
     }
 
     function drawPlayers() {
+        // draws the player's sprites
+
         ctx.beginPath();
         //ctx.rect(player1.x, player1.y, 40, 100);
         ctx.lineWidth = 3;
@@ -114,6 +126,8 @@
             ctx.moveTo(player1.x + playerWidth, player1.y + playerHeight/5);
             ctx.arc(player1.x + playerWidth/2, player1.y + playerHeight/5, playerWidth/2, 0, 2 * Math.PI);
             if(player1.direction === "CENTER") {
+                // changes player's sprite based on where they look
+
                 ctx.moveTo(player1.x + playerWidth * 16 / 40, player1.y + playerHeight * 6 / 50);
                 ctx.arc(player1.x + playerWidth * 13 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
                 ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 6 / 50);
@@ -122,12 +136,16 @@
                 ctx.arc(player1.x + playerWidth / 2, player1.y + playerHeight * 22 / 100, playerWidth / 4, 0, Math.PI);
             }
             if(player1.direction === "LEFT") {
+                // changes player's sprite based on where they look
+
                 ctx.moveTo(player1.x + playerWidth * 16 / 40, player1.y + playerHeight * 6 / 50);
                 ctx.arc(player1.x + playerWidth * 13 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
                 ctx.moveTo(player1.x + playerWidth * 15 / 40, player1.y + playerHeight * 12 / 50);
                 ctx.arc(player1.x + playerWidth * 5 / 40, player1.y + playerHeight * 12 / 50, playerWidth / 4, 0, 0.5 * Math.PI);
             }
             if(player1.direction === "RIGHT") {
+                // changes player's sprite based on where they look
+
                 ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 6 / 50);
                 ctx.arc(player1.x + playerWidth * 27 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
                 ctx.moveTo(player1.x + playerWidth * 25 / 40, player1.y + playerHeight * 12 / 50);
@@ -150,35 +168,45 @@
     }
 
     function gravityChange(){
+        // uses gravity variables to create gravity
+
         gravitySpeed += gravity;
         player1.y += gravitySpeed;
     }
 
-    function jumpChange(){
-        jumpSpeed -= jump/20;
-        player1.y += jumpSpeed;
-    }
-
     function playerLocation(){
         if(player1.rightPressed){
+            // moves player right
+
             player1.x += 5;
         }
         if(player1.leftPressed){
+            // moves player left
+
             player1.x -= 5;
         }
         if(player1.upPressed){
+            // if player canJump, they jump
             if(canJump) {
-                jumpSpeed += jump;
-                canJump = false;
+                jumpCount += 1;
+                if (jumpCount <= 50) {
+                    gravitySpeed = 0;
+                    player1.y -= jump;
+                }
             }
-            jumpChange();
-        }
-        if(player1.downPressed){
-            player1.y += 5;
         }
 
+        // moves player down when down key is pressed, not used
+        /*if(player1.downPressed){
+              player1.y += 5;
+        }*/
+
+
+        // calls gravity change function
         gravityChange();
 
+
+        // makes sure player is withing canvas and enviornment
         if(player1.x-6<0){
             player1.x = 6;
         }
@@ -188,15 +216,19 @@
 
         if(player1.y+playerHeight+6>canvas.height){
             player1.y = canvas.height - playerHeight - 6;
-        }
-
-        if(player1.y-6<=0){
-            player1.y = 6;
+            jumpCount = 0;
             gravitySpeed = 0;
             canJump = true;
         }
 
+        if(player1.y-6<=0){
+            player1.y = 6;
+            //canJump = true;
+        }
+
+
     }
+    // collision detection function, still needs lots of progress
 /*
     function collisionDetection(objects){
         for(var i = 0; i < objects.length; i++){
@@ -222,6 +254,7 @@
     */
 
     function draw() {
+        // draws everything
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         playerLocation();
@@ -229,6 +262,7 @@
         drawEnviornment();
     }
 
+    // calls draw
     setInterval(draw, 10);
 </script>
 
