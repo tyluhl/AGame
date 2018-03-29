@@ -22,6 +22,7 @@
     var player4 = {};
 
     var players = [player1, player2, player3, player4];
+    var keys = [[68, 65, 83, 87, 81], [39, 37, 38, 40, 191], [72, 70, 84, 71, 82], [76, 74, 73, 75, 85]];
 
     var playerSize = 1;
     var playerWidth = playerSize*40;
@@ -43,6 +44,11 @@
         players[i]["y"] = Math.round(Math.random() * canvas.height);
         players[i]["health"] = 100;
         players[i]["direction"] = "CENTER";
+        players[i]["keys"]["left"] = keys[i][0];
+        players[i]["keys"]["right"] = keys[i][1];
+        players[i]["keys"]["up"] = keys[i][2];
+        players[i]["keys"]["down"] = keys[i][3];
+        players[i]["keys"]["shoot"] = keys[i][4];
     }
 
     document.addEventListener("keydown", keyDownHandler, false);
@@ -110,41 +116,41 @@
         ctx.beginPath();
         //ctx.rect(player1.x, player1.y, 40, 100);
         ctx.lineWidth = 3;
-        //for(var i = 0; i < 4; i++) {
-            ctx.moveTo(player1.x + playerWidth, player1.y + playerHeight/5);
-            ctx.arc(player1.x + playerWidth/2, player1.y + playerHeight/5, playerWidth/2, 0, 2 * Math.PI);
-            if(player1.direction === "CENTER") {
-                ctx.moveTo(player1.x + playerWidth * 16 / 40, player1.y + playerHeight * 6 / 50);
-                ctx.arc(player1.x + playerWidth * 13 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
-                ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 6 / 50);
-                ctx.arc(player1.x + playerWidth * 27 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
-                ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 22 / 100);
-                ctx.arc(player1.x + playerWidth / 2, player1.y + playerHeight * 22 / 100, playerWidth / 4, 0, Math.PI);
+        for(var i = 0; i < numPlayers; i++) {
+            ctx.moveTo(players[i].x + playerWidth, players[i].y + playerHeight/5);
+            ctx.arc(players[i].x + playerWidth/2, players[i].y + playerHeight/5, playerWidth/2, 0, 2 * Math.PI);
+            if(players[i].direction === "CENTER") {
+                ctx.moveTo(players[i].x + playerWidth * 16 / 40, players[i].y + playerHeight * 6 / 50);
+                ctx.arc(players[i].x + playerWidth * 13 / 40, players[i].y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(players[i].x + playerWidth * 3 / 4, players[i].y + playerHeight * 6 / 50);
+                ctx.arc(players[i].x + playerWidth * 27 / 40, players[i].y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(players[i].x + playerWidth * 3 / 4, players[i].y + playerHeight * 22 / 100);
+                ctx.arc(players[i].x + playerWidth / 2, players[i].y + playerHeight * 22 / 100, playerWidth / 4, 0, Math.PI);
             }
-            if(player1.direction === "LEFT") {
-                ctx.moveTo(player1.x + playerWidth * 16 / 40, player1.y + playerHeight * 6 / 50);
-                ctx.arc(player1.x + playerWidth * 13 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
-                ctx.moveTo(player1.x + playerWidth * 15 / 40, player1.y + playerHeight * 12 / 50);
-                ctx.arc(player1.x + playerWidth * 5 / 40, player1.y + playerHeight * 12 / 50, playerWidth / 4, 0, 0.5 * Math.PI);
+            if(players[i].direction === "LEFT") {
+                ctx.moveTo(players[i].x + playerWidth * 16 / 40, players[i].y + playerHeight * 6 / 50);
+                ctx.arc(players[i].x + playerWidth * 13 / 40, players[i].y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(players[i].x + playerWidth * 15 / 40, players[i].y + playerHeight * 12 / 50);
+                ctx.arc(players[i].x + playerWidth * 5 / 40, players[i].y + playerHeight * 12 / 50, playerWidth / 4, 0, 0.5 * Math.PI);
             }
-            if(player1.direction === "RIGHT") {
-                ctx.moveTo(player1.x + playerWidth * 3 / 4, player1.y + playerHeight * 6 / 50);
-                ctx.arc(player1.x + playerWidth * 27 / 40, player1.y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
-                ctx.moveTo(player1.x + playerWidth * 25 / 40, player1.y + playerHeight * 12 / 50);
-                ctx.arc(player1.x + playerWidth * 35 / 40, player1.y + playerHeight * 12 / 50, playerWidth / 4, Math.PI, .5 * Math.PI, true);
+            if(players[i].direction === "RIGHT") {
+                ctx.moveTo(players[i].x + playerWidth * 3 / 4, players[i].y + playerHeight * 6 / 50);
+                ctx.arc(players[i].x + playerWidth * 27 / 40, players[i].y + playerHeight * 6 / 50, playerWidth * 3 / 40, 0, 2 * Math.PI);
+                ctx.moveTo(players[i].x + playerWidth * 25 / 40, players[i].y + playerHeight * 12 / 50);
+                ctx.arc(players[i].x + playerWidth * 35 / 40, players[i].y + playerHeight * 12 / 50, playerWidth / 4, Math.PI, .5 * Math.PI, true);
             }
 
-            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*2/5);
-            ctx.lineTo(player1.x + playerWidth/2, player1.y + playerHeight*4/5);
-            ctx.lineTo(player1.x, player1.y + playerHeight);
-            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*4/5);
-            ctx.lineTo(player1.x + playerWidth, player1.y + playerHeight);
-            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*3/5);
-            ctx.lineTo(player1.x, player1.y + playerHeight*2/5);
-            ctx.moveTo(player1.x + playerWidth/2, player1.y + playerHeight*3/5);
-            ctx.lineTo(player1.x + playerWidth, player1.y + playerHeight*2/5);
+            ctx.moveTo(players[i].x + playerWidth/2, players[i].y + playerHeight*2/5);
+            ctx.lineTo(players[i].x + playerWidth/2, players[i].y + playerHeight*4/5);
+            ctx.lineTo(players[i].x, players[i].y + playerHeight);
+            ctx.moveTo(players[i].x + playerWidth/2, players[i].y + playerHeight*4/5);
+            ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight);
+            ctx.moveTo(players[i].x + playerWidth/2, players[i].y + playerHeight*3/5);
+            ctx.lineTo(players[i].x, players[i].y + playerHeight*2/5);
+            ctx.moveTo(players[i].x + playerWidth/2, players[i].y + playerHeight*3/5);
+            ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight*2/5);
             ctx.stroke();
-        //}
+        }
         //ctx.fill();
         ctx.closePath();
     }
@@ -197,29 +203,6 @@
         }
 
     }
-/*
-    function collisionDetection(objects){
-        for(var i = 0; i < objects.length; i++){
-            if(player1.x-6<i.width){
-                player1.x = 6;
-            }
-            if(player1.x+6+playerWidth>canvas.width){
-                player1.x = canvas.width - playerWidth -6;
-            }
-
-            if(player1.y+playerHeight+6>canvas.height){
-                player1.y = canvas.height - playerHeight - 6;
-            }
-
-            if(player1.y-6<0){
-                player1.y = 6;
-            }
-
-        }
-
-    }
-
-    */
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
