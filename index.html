@@ -27,6 +27,13 @@
     var playerWidth = playerSize*40;
     var playerHeight = playerSize*100;
 
+    var gravity = 0.1;
+    var gravitySpeed = 0;
+
+    var jump = 0.3;
+    var jumpSpeed = 0;
+    var canJump = true;
+
     for(var i = 0; i < players.length; i++) {
         players[i]["rightPressed"] = false;
         players[i]["leftPressed"] = false;
@@ -87,13 +94,16 @@
 
     function drawEnviornment(){
         ctx.beginPath();
-        ctx.rect(0, canvas.height-5, canvas.width, 5);
-        ctx.rect(0, 0, 5, canvas.height);
-        ctx.rect(canvas.width-5, 0, 5, canvas.height);
-        ctx.rect(0, 0, canvas.width, 5);
+        var ground = ctx.rect(0, canvas.height-5, canvas.width, 5);
+        var leftWall = ctx.rect(0, 0, 5, canvas.height);
+        var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
+        var ceiling = ctx.rect(0, 0, canvas.width, 5);
+        var objects = [ground, leftWall, rightWall, ceiling];
         ctx.fillStyle = "#dd1030";
         ctx.fill();
         ctx.closePath();
+
+        return objects;
     }
 
     function drawPlayers() {
@@ -139,6 +149,16 @@
         ctx.closePath();
     }
 
+    function gravityChange(){
+        gravitySpeed += gravity;
+        player1.y += gravitySpeed;
+    }
+
+    function jumpChange(){
+        jumpSpeed -= jump/20;
+        player1.y += jumpSpeed;
+    }
+
     function playerLocation(){
         if(player1.rightPressed){
             player1.x += 5;
@@ -147,11 +167,17 @@
             player1.x -= 5;
         }
         if(player1.upPressed){
-            player1.y -= 5;
+            if(canJump) {
+                jumpSpeed += jump;
+                canJump = false;
+            }
+            jumpChange();
         }
         if(player1.downPressed){
             player1.y += 5;
         }
+
+        gravityChange();
 
         if(player1.x-6<0){
             player1.x = 6;
@@ -164,11 +190,35 @@
             player1.y = canvas.height - playerHeight - 6;
         }
 
-        if(player1.y-6<0){
+        if(player1.y-6<=0){
             player1.y = 6;
+            gravitySpeed = 0;
+            canJump = true;
         }
 
     }
+/*
+    function collisionDetection(objects){
+        for(var i = 0; i < objects.length; i++){
+            if(player1.x-6<i.width){
+                player1.x = 6;
+            }
+            if(player1.x+6+playerWidth>canvas.width){
+                player1.x = canvas.width - playerWidth -6;
+            }
+
+            if(player1.y+playerHeight+6>canvas.height){
+                player1.y = canvas.height - playerHeight - 6;
+            }
+
+            if(player1.y-6<0){
+                player1.y = 6;
+            }
+
+        }
+
+    }
+    */
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
