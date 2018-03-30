@@ -37,7 +37,7 @@
     var gravitySpeed = 0;
 
     var jump = 5;
-    //var canJump = true;
+    var canJump = true;
 
     // appends attributes to each player
     for(var i = 0; i < players.length; i++) {
@@ -49,7 +49,6 @@
         players[i]["y"] = Math.round(Math.random() * canvas.height);
         players[i]["health"] = 100;
         players[i]["direction"] = "CENTER";
-        players[i]["canJump"] = true;
         players[i]["keys"] = {};
         players[i]["keys"]["left"] = keys[i][0];
         players[i]["keys"]["right"] = keys[i][1];
