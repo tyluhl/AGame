@@ -23,9 +23,9 @@
     var player4 = {};
 
     var players = [player1, player2, player3, player4];
-    var playerNum = 2;
+    var playerNum = 4;
 
-    var keys = [[68, 65, 83, 87, 81], [39, 37, 38, 40, 191], [72, 70, 84, 71, 82], [76, 74, 73, 75, 85]];
+    var keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
 
     // var used to create player sprite
     var playerSize = 1;
@@ -33,14 +33,20 @@
     var playerHeight = playerSize*100;
 
     // gravity and jump variables
-    var gravity = 0.2;
-    var gravitySpeed = 0;
+    var gravity = 0.025;
 
     var jump = 5;
-    var canJump = true;
+    var jumpCount = 0;
+
+    var colors = ["#4f70dd", "#70dd69", "#dd1030", "#ddbd46"];
+
 
     // appends attributes to each player
     for(var i = 0; i < playerNum; i++) {
+        players[i]["color"] = colors[Math.floor(Math.random() * 4)];
+        players[i]["jumpCount"] = 0;
+        players[i]["canJump"] = false;
+        players[i]["gravitySpeed"] = 0;
         players[i]["rightPressed"] = false;
         players[i]["leftPressed"] = false;
         players[i]["upPressed"] = false;
@@ -55,6 +61,7 @@
         players[i]["keys"]["down"] = keys[i][2];
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
+        colors.splice(colors.indexOf(players[i].color), 1);
     }
 
     // allows to take key input
@@ -175,8 +182,8 @@
             ctx.moveTo(players[i].x + playerWidth / 2, players[i].y + playerHeight * 3 / 5);
             ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight * 2 / 5);
             ctx.stroke();
-            //}
-            //ctx.fill();
+            ctx.strokeStyle = players[i].color;
+            ctx.stroke();
             ctx.closePath();
         }
     }
@@ -184,60 +191,64 @@
     function gravityChange(){
         // uses gravity variables to create gravity
 
-        gravitySpeed += gravity;
-        player1.y += gravitySpeed;
+        for(var i = 0; i < playerNum; i++) {
+            players[i].gravitySpeed += gravity;
+            players[i].y += players[i].gravitySpeed;
+        }
     }
 
     function playerLocation(){
-        if(player1.rightPressed){
-            // moves player right
+        for(var i = 0; i < playerNum; i++) {
+            if (players[i].rightPressed) {
+                // moves player right
 
-            player1.x += 5;
-        }
-        if(player1.leftPressed){
-            // moves player left
+                players[i].x += 5;
+            }
+            if (players[i].leftPressed) {
+                // moves player left
 
-            player1.x -= 5;
-        }
-        if(player1.upPressed){
-            // if player canJump, they jump
-            if(canJump) {
-                jumpCount += 1;
-                if (jumpCount <= 50) {
-                    gravitySpeed = 0;
-                    player1.y -= jump;
+                players[i].x -= 5;
+            }
+            if (players[i].upPressed) {
+                // if player canJump, they jump
+                if (players[i].canJump) {
+                    players[i].jumpCount += 1;
+                    if (players[i].jumpCount <= 50) {
+                        players[i].gravitySpeed = 0;
+                        players[i].y -= jump;
+                    }
                 }
             }
-        }
 
-        // moves player down when down key is pressed, not used
-        /*if(player1.downPressed){
+            // moves player down when down key is pressed, not used
+            /*if(player1.downPressed){
               player1.y += 5;
         }*/
 
 
-        // calls gravity change function
-        gravityChange();
+            // calls gravity change function
+            gravityChange();
 
 
-        // makes sure player is withing canvas and enviornment
-        if(player1.x-6<0){
-            player1.x = 6;
-        }
-        if(player1.x+6+playerWidth>canvas.width){
-            player1.x = canvas.width - playerWidth -6;
-        }
+            // makes sure player is withing canvas and enviornment
+            if (players[i].x - 6 < 0) {
+                players[i].x = 6;
+            }
+            if (players[i].x + 6 + playerWidth > canvas.width) {
+                players[i].x = canvas.width - playerWidth - 6;
+            }
 
-        if(player1.y+playerHeight+6>canvas.height){
-            player1.y = canvas.height - playerHeight - 6;
-            jumpCount = 0;
-            gravitySpeed = 0;
-            canJump = true;
-        }
+            if (players[i].y + playerHeight + 6 > canvas.height) {
+                players[i].y = canvas.height - playerHeight - 6;
+                players[i].jumpCount = 0;
+                players[i].gravitySpeed = 0;
+                players[i].canJump = true;
+            }
 
-        if(player1.y-6<=0){
-            player1.y = 6;
-            //canJump = true;
+            if (players[i].y - 6 <= 0) {
+                players[i].y = 6;
+                //canJump = true;
+            }
         }
 
 
