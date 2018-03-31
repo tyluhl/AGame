@@ -40,7 +40,7 @@
     var canJump = true;
 
     // appends attributes to each player
-    for(var i = 0; i < players.length; i++) {
+    for(var i = 0; i < playerNum; i++) {
         players[i]["rightPressed"] = false;
         players[i]["leftPressed"] = false;
         players[i]["upPressed"] = false;
@@ -50,10 +50,10 @@
         players[i]["health"] = 100;
         players[i]["direction"] = "CENTER";
         players[i]["keys"] = {};
-        players[i]["keys"]["left"] = keys[i][0];
-        players[i]["keys"]["right"] = keys[i][1];
-        players[i]["keys"]["up"] = keys[i][2];
-        players[i]["keys"]["down"] = keys[i][3];
+        players[i]["keys"]["right"] = keys[i][0];
+        players[i]["keys"]["left"] = keys[i][1];
+        players[i]["keys"]["down"] = keys[i][2];
+        players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
     }
 
@@ -65,21 +65,21 @@
     function keyDownHandler(e) {
         // changes appropriate variables in player based on keys pressed
         for(var i = 0; i < playerNum; i++) {
-            if (e.keyCode === players[i].keys.left) {
+            if (e.keyCode === players[i].keys.right) {
                 players[i].leftPressed = false;
                 players[i].rightPressed = true;
                 players[i].direction = "RIGHT";
             }
-            if (e.keyCode === players[i].keys.right) {
+            if (e.keyCode === players[i].keys.left) {
                 players[i].rightPressed = false;
                 players[i].leftPressed = true;
                 players[i].direction = "LEFT";
             }
-            if (e.keyCode === players[i].keys.down) {
+            if (e.keyCode === players[i].keys.up) {
                 players[i].downPressed = false;
                 players[i].upPressed = true;
             }
-            if (e.keyCode === players[i].keys.up) {
+            if (e.keyCode === players[i].keys.down) {
                 players[i].upPressed = false;
                 players[i].downPressed = true;
             }
@@ -89,17 +89,17 @@
     function keyUpHandler(e) {
         // changes appropriate variables based on keys lifted
         for (var i = 0; i < playerNum; i++) {
-            if (e.keyCode === players[i].keys.left) {
+            if (e.keyCode === players[i].keys.right) {
                 players[i].rightPressed = false;
             }
-            if (e.keyCode === players[i].keys.right) {
+            if (e.keyCode === players[i].keys.left) {
                 players[i].leftPressed = false;
             }
-            if (e.keyCode === players[i].keys.down) {
+            if (e.keyCode === players[i].keys.up) {
                 canJump = false;
                 players[i].upPressed = false;
             }
-            if (e.keyCode === players[i].keys.up) {
+            if (e.keyCode === players[i].keys.down) {
                 players[i].downPressed = false;
             }
         }
@@ -121,7 +121,7 @@
         var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
         var ceiling = ctx.rect(0, 0, canvas.width, 5);
         var objects = [ground, leftWall, rightWall, ceiling];
-        ctx.fillStyle = "#dd1030";
+        ctx.fillStyle = "#000000";
         ctx.fill();
         ctx.closePath();
 
