@@ -43,7 +43,9 @@
 
     // appends attributes to each player
     for(var i = 0; i < playerNum; i++) {
-        players[i]["color"] = colors[Math.floor(Math.random() * 4)];
+        players[i]["color"] = colors[Math.floor(Math.random() * colors.length)];
+        colors.splice(colors.indexOf(players[i].color), 1);
+        // gives players same color each time: players[i]["color"] = colors[i];
         players[i]["jumpCount"] = 0;
         players[i]["canJump"] = false;
         players[i]["gravitySpeed"] = 0;
@@ -61,7 +63,6 @@
         players[i]["keys"]["down"] = keys[i][2];
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
-        colors.splice(colors.indexOf(players[i].color), 1);
     }
 
     // allows to take key input
@@ -103,7 +104,7 @@
                 players[i].leftPressed = false;
             }
             if (e.keyCode === players[i].keys.up) {
-                canJump = false;
+                players[i].canJump = false;
                 players[i].upPressed = false;
             }
             if (e.keyCode === players[i].keys.down) {
@@ -138,11 +139,9 @@
     function drawPlayers() {
         // draws the player's sprites
 
-        ctx.beginPath();
-        //ctx.rect(player1.x, player1.y, 40, 100);
-        ctx.lineWidth = 3;
-        //for(var i = 0; i < 4; i++) {
         for(var i = 0; i < playerNum; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = 3;
             ctx.moveTo(players[i].x + playerWidth, players[i].y + playerHeight/5);
             ctx.arc(players[i].x + playerWidth/2, players[i].y + playerHeight/5, playerWidth/2, 0, 2 * Math.PI);
             if (players[i].direction === "CENTER") {
