@@ -14,8 +14,8 @@
 
 <script>
     //  create canvas
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
 
     var player1 = {};
     var player2 = {};
@@ -27,27 +27,26 @@
     var players = [player1, player2, player3, player4];
     var zombies = [zombie1, zombie2];
     var sprites = [player1, player2, player3, player4, zombie1];
-    var playerNum = 1;
+    const playerNum = 1;
 
-    var keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
+    const keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
 
     // var used to create player sprite
-    var playerSize = 1;
-    var playerWidth = playerSize*40;
-    var playerHeight = playerSize*100;
+    const playerSize = 1;
+    const playerWidth = playerSize*40;
+    const playerHeight = playerSize*100;
 
     // gravity and jump variables
     // 0.025
     const gravity = 0.3/playerNum; // fix gravity, changes based on how many players there are
 
-    var jump = 5;
-    var jumpCount = 0;
+    const jump = 5;
 
     var colors = ["#4f70dd", "#70dd69", "#dd1030", "#ddbd46"];
 
 
     // appends attributes to each player
-    for(var i = 0; i < playerNum; i++) {
+    for(let i = 0; i < playerNum; i++) {
         players[i]["color"] = colors[Math.floor(Math.random() * colors.length)];
         colors.splice(colors.indexOf(players[i].color), 1);
         // gives players same color each time: players[i]["color"] = colors[i];
@@ -70,7 +69,7 @@
         players[i]["keys"]["shoot"] = keys[i][4];
     }
 
-    for(var i = 0; i < zombies.length; i++){
+    for(let i = 0; i < zombies.length; i++){
         zombies[i]["health"] = 100;
         zombies[i]["damage"] = 10;
         zombies[i]["rightPressed"] = false;
@@ -88,7 +87,7 @@
 
     function keyDownHandler(e) {
         // changes appropriate variables in player based on keys pressed
-        for(var i = 0; i < playerNum; i++) {
+        for(let i = 0; i < playerNum; i++) {
             if (e.keyCode === players[i].keys.right) {
                 players[i].leftPressed = false;
                 players[i].rightPressed = true;
@@ -112,7 +111,7 @@
     }
     function keyUpHandler(e) {
         // changes appropriate variables based on keys lifted
-        for (var i = 0; i < playerNum; i++) {
+        for (let i = 0; i < playerNum; i++) {
             if (e.keyCode === players[i].keys.right) {
                 players[i].rightPressed = false;
             }
@@ -141,11 +140,12 @@
         // draws environment, as of now just rectangles around canvas
         ctx.beginPath();
         var ground = environment(0, canvas.height-5, canvas.width, 5);
+        ctx.rect(ground.startx, ground.starty, ground.width, ground.height);
         var leftWall = ctx.rect(0, 0, 5, canvas.height);
         var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
         var ceiling = ctx.rect(0, 0, canvas.width, 5);
         var platform1 = ctx.rect(0, (7/10)*canvas.height, canvas.width/3, 5);
-        var objects = [ground, leftWall, rightWall, ceiling, platform1];
+        //var objects = [ground, leftWall, rightWall, ceiling, platform1];
         ctx.fillStyle = "#000000";
         ctx.fill();
         ctx.closePath();
@@ -156,7 +156,7 @@
     function drawPlayers() {
         // draws the player's sprites
 
-        for(var i = 0; i < playerNum; i++) {
+        for(let i = 0; i < playerNum; i++) {
             ctx.beginPath();
             ctx.lineWidth = 3;
             ctx.moveTo(players[i].x + playerWidth, players[i].y + playerHeight/5);
@@ -206,14 +206,14 @@
     function gravityChange(){
         // uses gravity variables to create gravity
 
-        for(var i = 0; i < playerNum; i++) {
+        for(let i = 0; i < playerNum; i++) {
             players[i].gravitySpeed += gravity;
             players[i].y += players[i].gravitySpeed;
         }
     }
 
     function playerLocation(){
-        for(var i = 0; i < playerNum; i++) {
+        for(let i = 0; i < playerNum; i++) {
             if (players[i].rightPressed) {
                 // moves player right
 
@@ -262,6 +262,7 @@
 
     }
     // collision detection function, still needs lots of progress
+    /*
         function collisionDetection(objects){
             for(var i = 0; i < objects.length; i++){
                 if(player1.x-6<i.width){
@@ -282,6 +283,7 @@
             }
 
         }
+        */
 
 
 
