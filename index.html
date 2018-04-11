@@ -38,7 +38,7 @@
 
     // gravity and jump variables
     // 0.025
-    var gravity = 0.3/playerNum; // fix gravity, changes based on how many players there are
+    const gravity = 0.3/playerNum; // fix gravity, changes based on how many players there are
 
     var jump = 5;
     var jumpCount = 0;
@@ -79,7 +79,6 @@
         zombies[i]["downPressed"] = false;
         zombies[i]["x"] = Math.round(Math.random() * canvas.width);
         zombies[i]["y"] = Math.round(Math.random() * canvas.height);
-
     }
 
     // allows to take key input
@@ -138,14 +137,15 @@
         }
     }*/
 
-    function drawEnviornment(){
-        // draws enviornment, as of now just rectangles around canvas
+    function drawEnvironment(){
+        // draws environment, as of now just rectangles around canvas
         ctx.beginPath();
-        var ground = ctx.rect(0, canvas.height-5, canvas.width, 5);
+        var ground = environment(0, canvas.height-5, canvas.width, 5);
         var leftWall = ctx.rect(0, 0, 5, canvas.height);
         var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
         var ceiling = ctx.rect(0, 0, canvas.width, 5);
-        var objects = [ground, leftWall, rightWall, ceiling];
+        var platform1 = ctx.rect(0, (7/10)*canvas.height, canvas.width/3, 5);
+        var objects = [ground, leftWall, rightWall, ceiling, platform1];
         ctx.fillStyle = "#000000";
         ctx.fill();
         ctx.closePath();
@@ -235,17 +235,11 @@
                 }
             }
 
-            // moves player down when down key is pressed, not used
-            /*if(player1.downPressed){
-              player1.y += 5;
-        }*/
-
-
             // calls gravity change function
             gravityChange();
 
 
-            // makes sure player is withing canvas and enviornment
+            // makes sure player is withing canvas and environment
             if (players[i].x - 6 < 0) {
                 players[i].x = 6;
             }
@@ -262,14 +256,12 @@
 
             if (players[i].y - 6 <= 0) {
                 players[i].y = 6;
-                //canJump = true;
             }
         }
 
 
     }
     // collision detection function, still needs lots of progress
-    /*
         function collisionDetection(objects){
             for(var i = 0; i < objects.length; i++){
                 if(player1.x-6<i.width){
@@ -291,7 +283,7 @@
 
         }
 
-        */
+
 
     function draw() {
         // draws everything
@@ -299,7 +291,7 @@
 
         playerLocation();
         drawPlayers();
-        drawEnviornment();
+        drawEnvironment();
     }
 
     // calls draw
