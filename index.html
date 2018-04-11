@@ -18,9 +18,7 @@
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
 
-    var keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
-
-    var player1 = new Player();
+    var player1 = {};
     var player2 = {};
     var player3 = {};
     var player4 = {};
@@ -31,6 +29,8 @@
     var zombies = [zombie1, zombie2];
     var sprites = [player1, player2, player3, player4, zombie1];
     var playerNum = 1;
+
+    var keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
 
     // var used to create player sprite
     var playerSize = 1;
@@ -48,7 +48,7 @@
 
 
     // appends attributes to each player
-    /*for(var i = 0; i < playerNum; i++) {
+    for(var i = 0; i < playerNum; i++) {
         players[i]["color"] = colors[Math.floor(Math.random() * colors.length)];
         colors.splice(colors.indexOf(players[i].color), 1);
         // gives players same color each time: players[i]["color"] = colors[i];
@@ -69,7 +69,7 @@
         players[i]["keys"]["down"] = keys[i][2];
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
-    }*/
+    }
 
     for(var i = 0; i < zombies.length; i++){
         zombies[i]["health"] = 100;
