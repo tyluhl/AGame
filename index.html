@@ -21,9 +21,13 @@
     var player2 = {};
     var player3 = {};
     var player4 = {};
+    var zombie1 = {};
+    var zombie2 = {};
 
     var players = [player1, player2, player3, player4];
-    var playerNum = 4;
+    var zombies = [zombie1, zombie2];
+    var sprites = [player1, player2, player3, player4, zombie1];
+    var playerNum = 1;
 
     var keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
 
@@ -33,7 +37,8 @@
     var playerHeight = playerSize*100;
 
     // gravity and jump variables
-    var gravity = 0.025;
+    // 0.025
+    var gravity = 0.3/playerNum; // fix gravity, changes based on how many players there are
 
     var jump = 5;
     var jumpCount = 0;
@@ -63,6 +68,18 @@
         players[i]["keys"]["down"] = keys[i][2];
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
+    }
+
+    for(var i = 0; i < zombies.length; i++){
+        zombies[i]["health"] = 100;
+        zombies[i]["damage"] = 10;
+        zombies[i]["rightPressed"] = false;
+        zombies[i]["leftPressed"] = false;
+        zombies[i]["upPressed"] = false;
+        zombies[i]["downPressed"] = false;
+        zombies[i]["x"] = Math.round(Math.random() * canvas.width);
+        zombies[i]["y"] = Math.round(Math.random() * canvas.height);
+
     }
 
     // allows to take key input
@@ -180,7 +197,6 @@
             ctx.lineTo(players[i].x, players[i].y + playerHeight * 2 / 5);
             ctx.moveTo(players[i].x + playerWidth / 2, players[i].y + playerHeight * 3 / 5);
             ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight * 2 / 5);
-            ctx.stroke();
             ctx.strokeStyle = players[i].color;
             ctx.stroke();
             ctx.closePath();
