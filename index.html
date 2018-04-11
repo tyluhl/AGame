@@ -13,6 +13,7 @@
 <canvas id="myCanvas" width="1200" height="600"></canvas>
 
 <script>
+
     //  create canvas
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
@@ -139,7 +140,7 @@
     function drawEnvironment(){
         // draws environment, as of now just rectangles around canvas
         ctx.beginPath();
-        var ground = environment(0, canvas.height-5, canvas.width, 5);
+        var ground = new Environment(0, canvas.height-5, canvas.width, 5);
         ctx.rect(ground.startx, ground.starty, ground.width, ground.height);
         var leftWall = ctx.rect(0, 0, 5, canvas.height);
         var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
