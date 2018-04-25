@@ -155,8 +155,6 @@
     }
 
     function drawPlayers() {
-        // draws the player's sprites
-
         for(var i = 0; i < playerNum; i++) {
             ctx.beginPath();
             ctx.lineWidth = 3;
@@ -204,7 +202,8 @@
         }
     }
 
-    function gravityChange(){
+
+    function gravityChange() {
         // uses gravity variables to create gravity
 
         for(var i = 0; i < playerNum; i++) {
@@ -250,12 +249,12 @@
             if (players[i].x - 6 < 0) {
                 players[i].x = 6;
             }
-            if (players[i].x + 6 + playerWidth > canvas.width) {
-                players[i].x = canvas.width - playerWidth - 6;
+            if (players[i].x + 6 + players[i].playerWidth > canvas.width) {
+                players[i].x = canvas.width - players[i].playerWidth - 6;
             }
 
-            if (players[i].y + playerHeight + 6 > canvas.height) {
-                players[i].y = canvas.height - playerHeight - 6;
+            if (players[i].y + players[i].playerHeight + 6 > canvas.height) {
+                players[i].y = canvas.height - players[i].playerHeight - 6;
                 players[i].jumpCount = 0;
                 players[i].gravitySpeed = 0;
                 players[i].canJump = true;
@@ -293,10 +292,17 @@
         }
 
         */
+    /*function drawPlayers() {
+        for(var i = 0; i < players.length; i++) {
+          players[i].drawPlayer();
+        }
+    }*/
 
     function draw() {
         // draws everything
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        //player1.drawPlayer();
 
         playerLocation();
         drawPlayers();
