@@ -132,6 +132,9 @@
             x = relativeX - y/2;
         }
     }*/
+    function platformCollisionDetection(x, y, length) {
+    }
+    }
     function drawEnviornment(){
         // draws enviornment, as of now just rectangles around canvas
         ctx.beginPath();
@@ -141,6 +144,11 @@
         var ceiling = ctx.rect(0, 0, canvas.width, 5);
         var objects = [ground, leftWall, rightWall, ceiling];
         ctx.fillStyle = "#000000";
+        ctx.fill();
+        ctx.closePath();
+        ctx.beginPath();
+        var plat1 = ctx.rect(0, canvas.height * (2/3), canvas.width / 6, 17);
+        ctx.fillStyle = "#676767";
         ctx.fill();
         ctx.closePath();
         return objects;
@@ -190,6 +198,7 @@
             ctx.closePath();
         }
     }
+
     function drawZombies() {
         for(var i = 0; i < zombieNum; i++) {
             ctx.beginPath();
