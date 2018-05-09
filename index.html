@@ -16,10 +16,22 @@
     //  create canvas
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
+    var zombie1 = {};
+    var zombie2 = {};
+    var zombie3 = {};
+    var zombie4 = {};
+    var zombie5 = {};
+    var zombie6 = {};
+    var zombie7 = {};
+    var zombie8 = {};
+    var zombie9 = {};
+    var zombie10 = {};
     var player1 = {};
     var player2 = {};
     var player3 = {};
     var player4 = {};
+    var zombies = [zombie1, zombie2, zombie3, zombie4, zombie5, zombie6, zombie7, zombie8, zombie9, zombie10];
+    var zombieNum = 5;
     var players = [player1, player2, player3, player4];
     var playerNum = 4;
     var keys = [[68, 65, 83, 87, 81], [39, 37, 40, 38, 191], [72, 70, 71, 84, 82], [76, 74, 75, 73, 85]];
@@ -27,15 +39,18 @@
     var playerSize = 1;
     var playerWidth = playerSize*40;
     var playerHeight = playerSize*100;
+    var zombieSize = 1;
+    var zombieWidth = zombieSize*40;
+    var zombieHeight = zombieSize*100;
     // gravity and jump variables
     var gravity = 0.025;
     var jump = 5;
     var jumpCount = 0;
-    var colors = ["#4f70dd", "#70dd69", "#dd1030", "#ddbd46"];
+    var playerColors = ["#ff0000", "#ff00ff", "#00ffff", "#ffff00"];
     // appends attributes to each player
     for(var i = 0; i < playerNum; i++) {
-        players[i]["color"] = colors[Math.floor(Math.random() * colors.length)];
-        colors.splice(colors.indexOf(players[i].color), 1);
+        players[i]["color"] = playerColors[i];
+        //colors.splice(colors.indexOf(players[i].color), 1);
         // gives players same color each time: players[i]["color"] = colors[i];
         players[i]["jumpCount"] = 0;
         players[i]["canJump"] = false;
@@ -46,7 +61,8 @@
         players[i]["downPressed"] = false;
         players[i]["x"] = Math.round(Math.random() * canvas.width);
         players[i]["y"] = Math.round(Math.random() * canvas.height);
-        players[i]["health"] = 100;
+        players[i]["speed"] = 1;
+        players[i]["hp"] = 100;
         players[i]["direction"] = "CENTER";
         players[i]["keys"] = {};
         players[i]["keys"]["right"] = keys[i][0];
@@ -54,6 +70,15 @@
         players[i]["keys"]["down"] = keys[i][2];
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
+    }
+    for(var i = 0; i < zombieNum; i++) {
+        zombies[i]["damage"] = 10;
+        zombies[i]["speed"] = 1;
+        zombies[i]["size"] = 1;
+        zombies[i]["direction"] = "right";
+        zombies[i]["hp"] = 50;
+        zombies[i]["x"] = Math.round(Math.random() * canvas.width);
+        zombies[i]["y"] = canvas.height-105;
     }
     // allows to take key input
     document.addEventListener("keydown", keyDownHandler, false);
@@ -165,6 +190,27 @@
             ctx.closePath();
         }
     }
+    function drawZombies() {
+        for(var i = 0; i < zombieNum; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = 3;
+            ctx.moveTo(zombies[i].x + zombieWidth / 5, zombies[i].y);
+            ctx.rect(zombies[i].x + zombieWidth / 5, zombies[i].y, zombieWidth * 3 / 5, zombieHeight / 5);
+            if (zombies[i].direction === "right") {
+                ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5);
+                ctx.lineTo(zombies[i].x + zombieWidth * 5/6, zombies[i].y + zombieHeight / 5);
+                //ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
+            }
+            ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3 / 10);
+            ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10, zombieWidth * 2 / 3, zombieHeight * 3 / 10);
+            ctx.stroke();
+            ctx.strokeStyle = "#00ff00";
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+
+    }
     function gravityChange(){
         // uses gravity variables to create gravity
         for(var i = 0; i < playerNum; i++) {
@@ -241,6 +287,7 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         playerLocation();
         drawPlayers();
+        drawZombies();
         drawEnviornment();
     }
     // calls draw
