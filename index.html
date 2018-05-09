@@ -139,10 +139,19 @@
         var leftWall = ctx.rect(0, 0, 5, canvas.height);
         var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
         var ceiling = ctx.rect(0, 0, canvas.width, 5);
-        var objects = [ground, leftWall, rightWall, ceiling];
         ctx.fillStyle = "#000000";
         ctx.fill();
         ctx.closePath();
+        ctx.beginPath();
+        var plat1 = ctx.rect(0, canvas.height * (2/3), canvas.width/6, 15);
+        var plat2 = ctx.rect(canvas.width * (5/6), canvas.height * (5/6), canvas.width/6, 15);
+        var plat3 = ctx.rect(canvas.width * (7/12), canvas.height * (1/2), canvas.width/6, 15);
+        var plat4 = ctx.rect(canvas.width * (3/12), canvas.height * (1/3), canvas.width/6, 15);
+       //var box = ctx.rect(canvas.width * (7/12), canvas.height * (1/2) - 50, 50, 50);
+        ctx.fillStyle = "#474747";
+        ctx.fill();
+        ctx.closePath();
+        var objects = [ground, leftWall, rightWall, ceiling, plat1, plat2, plat3, plat4];
         return objects;
     }
     function drawPlayers() {
