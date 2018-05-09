@@ -70,6 +70,7 @@
         players[i]["keys"]["down"] = keys[i][2];
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
+        players[i]["touchingZombie"] = false;
     }
     for(var i = 0; i < zombieNum; i++) {
         zombies[i]["damage"] = 10;
@@ -194,15 +195,22 @@
         for(var i = 0; i < zombieNum; i++) {
             ctx.beginPath();
             ctx.lineWidth = 3;
+            //Head
             ctx.moveTo(zombies[i].x + zombieWidth / 5, zombies[i].y);
             ctx.rect(zombies[i].x + zombieWidth / 5, zombies[i].y, zombieWidth * 3 / 5, zombieHeight / 5);
+            //Arms
             if (zombies[i].direction === "right") {
-                ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5);
-                ctx.lineTo(zombies[i].x + zombieWidth * 5/6, zombies[i].y + zombieHeight / 5);
-                //ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
+                ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
             }
-            ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3 / 10);
+            if (zombies[i].direction === "left") {
+                ctx.rect(zombies[i].x + zombieWidth, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
+            }
+            //Body
+            ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10);
             ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10, zombieWidth * 2 / 3, zombieHeight * 3 / 10);
+            //Legs
+            ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/5, zombieWidth / 3, zombieHeight * 2/5);
+            ctx.rect(zombies[i].x + zombieWidth / 2, zombies[i].y + zombieHeight * 3/5, zombieWidth / 3, zombieHeight * 2/5);
             ctx.stroke();
             ctx.strokeStyle = "#00ff00";
             ctx.stroke();
@@ -282,10 +290,44 @@
             }
         }
         */
+    function zombieDetection() {
+        for(var i = 0; i < playerNum; i++) {
+            players[i].touchingZombie = false;
+            for(var j = 0; j < zombieNum; j++) {
+                if(zombies[j].x + zombieWidth >= players[i].x && zombies[j].x <= players[i].x + playerWidth
+                && zombies[j].y + zombieHeight >= players[i].y && zombies[j].y <= players[i].y + playerHeight) {
+                    players[i].touchingZombie = true;
+                    if (players[i].hp > 0) {
+                        players[i].hp -= 1;
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    function drawScore() {
+        for(var i = 0; i < playerNum; i++) {
+            ctx.beginPath();
+            ctx.lineWidth = 3;
+            if (players[i].hp > 0) {
+                ctx.rect(10, 10 + 25 * i, players[i].hp, 10);
+            }
+            ctx.font = "20px TimesRoman";
+            ctx.fillText(players[i].hp, 15 + players[i].hp, 22 + 25*i);
+            ctx.stroke();
+            ctx.strokeStyle = "#00ff00";
+            ctx.stroke();
+            ctx.closePath();
+        }
+    }
+
     function draw() {
         // draws everything
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         playerLocation();
+        zombieDetection();
+        drawScore();
         drawPlayers();
         drawZombies();
         drawEnviornment();
