@@ -228,10 +228,13 @@
     }
     function gravityChange(){
         // uses gravity variables to create gravity
+
         for(var i = 0; i < playerNum; i++) {
             players[i].gravitySpeed += gravity;
             players[i].y += players[i].gravitySpeed;
+            players[i].direction = "down";
         }
+
     }
     function playerLocation(){
         for(var i = 0; i < playerNum; i++) {
