@@ -64,6 +64,7 @@
         players[i]["speed"] = 1;
         players[i]["hp"] = 100;
         players[i]["direction"] = "CENTER";
+        players[i]["direction2"] = "STILL";
         players[i]["keys"] = {};
         players[i]["keys"]["right"] = keys[i][0];
         players[i]["keys"]["left"] = keys[i][1];
@@ -133,17 +134,27 @@
             x = relativeX - y/2;
         }
     }*/
-    function drawEnviornment(){
-        // draws enviornment, as of now just rectangles around canvas
+
+    function drawEnvironment(){
+        // draws Environment, as of now just rectangles around canvas
         ctx.beginPath();
         var ground = ctx.rect(0, canvas.height-5, canvas.width, 5);
         var leftWall = ctx.rect(0, 0, 5, canvas.height);
         var rightWall = ctx.rect(canvas.width-5, 0, 5, canvas.height);
         var ceiling = ctx.rect(0, 0, canvas.width, 5);
-        var objects = [ground, leftWall, rightWall, ceiling];
         ctx.fillStyle = "#000000";
         ctx.fill();
         ctx.closePath();
+        ctx.beginPath();
+        var plat1 = ctx.rect(0, canvas.height * (2/3), canvas.width/6, 15);
+        var plat2 = ctx.rect(canvas.width * (5/6), canvas.height * (5/6), canvas.width/6, 15);
+        var plat3 = ctx.rect(canvas.width * (7/12), canvas.height * (1/2), canvas.width/6, 15);
+        var plat4 = ctx.rect(canvas.width * (3/12), canvas.height * (1/3), canvas.width/6, 15);
+       //var box = ctx.rect(canvas.width * (7/12), canvas.height * (1/2) - 50, 50, 50);
+        ctx.fillStyle = "#474747";
+        ctx.fill();
+        ctx.closePath();
+        var objects = [ground, leftWall, rightWall, ceiling, plat1, plat2, plat3, plat4];
         return objects;
     }
     function drawPlayers() {
@@ -191,6 +202,7 @@
             ctx.closePath();
         }
     }
+
     function drawZombies() {
         for(var i = 0; i < zombieNum; i++) {
             ctx.beginPath();
@@ -222,8 +234,11 @@
     function gravityChange(){
         // uses gravity variables to create gravity
         for(var i = 0; i < playerNum; i++) {
-            players[i].gravitySpeed += gravity;
+            if(players[i].gravitySpeed>1){
+                players[i].direction2 = "DOWN";
+            }
             players[i].y += players[i].gravitySpeed;
+            players[i].gravitySpeed += gravity;
         }
     }
     function playerLocation(){
@@ -241,6 +256,7 @@
                 if (players[i].canJump) {
                     players[i].jumpCount += 1;
                     if (players[i].jumpCount <= 50) {
+                        players[i].direction2 = "UP";
                         players[i].gravitySpeed = 0;
                         players[i].y -= jump;
                     }
@@ -252,7 +268,7 @@
         }*/
             // calls gravity change function
             gravityChange();
-            // makes sure player is withing canvas and enviornment
+            // makes sure player is withing canvas and Environment
             if (players[i].x - 6 < 0) {
                 players[i].x = 6;
             }
@@ -264,6 +280,7 @@
                 players[i].jumpCount = 0;
                 players[i].gravitySpeed = 0;
                 players[i].canJump = true;
+                players[i].direction2 = "STILL";
             }
             if (players[i].y - 6 <= 0) {
                 players[i].y = 6;
@@ -330,7 +347,7 @@
         drawScore();
         drawPlayers();
         drawZombies();
-        drawEnviornment();
+        drawEnvironment();
     }
     // calls draw
     setInterval(draw, 10);
