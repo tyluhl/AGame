@@ -93,6 +93,8 @@
         zombies[i]["hp"] = 50;
         zombies[i]["x"] = Math.round(Math.random() * canvas.width);
         zombies[i]["y"] = canvas.height-105;
+        zombies[i]["dx"] = 2 * Math.pow(-1, i);
+        if(zombies[i].dx<0) zombies[i]["direction"] = "left";
     }
     // allows to take key input
     document.addEventListener("keydown", keyDownHandler, false);
@@ -215,6 +217,20 @@
         }
     }
 
+    function updateZombies() {
+        for(var i = 0; i < zombieNum; i++) {
+            zombies[i].x += zombies[i].dx;
+            if(zombies[i].x + zombieWidth>=canvas.width){
+                zombies[i]["direction"] = "left";
+                zombies[i].dx *= -1;
+            }
+            else if(zombies[i].x<=0){
+                zombies[i]["direction"] = "right";
+                zombies[i].dx *= -1;
+            }
+        }
+    }
+
     function drawZombies() {
         for(var i = 0; i < zombieNum; i++) {
             ctx.beginPath();
@@ -227,7 +243,7 @@
                 ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
             }
             if (zombies[i].direction === "left") {
-                ctx.rect(zombies[i].x + zombieWidth, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
+                ctx.rect(zombies[i].x, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
             }
             //Body
             ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10);
@@ -358,6 +374,7 @@
         zombieDetection();
         drawScore();
         drawPlayers();
+        updateZombies();
         drawZombies();
         drawEnvironment();
     }
