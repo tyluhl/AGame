@@ -60,6 +60,13 @@
     var jumpCount = 0;
     var playerColors = ["#ff0000", "#ff00ff", "#00ffff", "#ffff00"];
     // appends attributes to each player
+    for(var i = 0; i < platNum; i++) {
+        plats[i]["x"] = 0;
+        plats[i]["y"] = 0;
+        plats[i]["width"] = 0;
+        plats[i]["height"] = 0;
+        plats[i]["color"] = 0;
+    }
     for(var i = 0; i < playerNum; i++) {
         players[i]["color"] = playerColors[i];
         //colors.splice(colors.indexOf(players[i].color), 1);
@@ -84,12 +91,18 @@
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
         players[i]["touchingZombie"] = false;
+        players[i]["shotInAir"] = false;
+        players[i]["bullet"] = {};
+        players[i]["bullet"]["x"] = players[i].x;
+        players[i]["bullet"]["y"] = players[i].y;
+        players[i]["bullet"]["velocity"] = 1;
+        players[i]["bullet"]["direction"] = "RIGHT";
     }
     for(var i = 0; i < zombieNum; i++) {
         zombies[i]["damage"] = 10;
         zombies[i]["speed"] = 1;
         zombies[i]["size"] = 1;
-        zombies[i]["direction"] = "right";
+        zombies[i]["direction"] = "left";
         zombies[i]["hp"] = 50;
         zombies[i]["x"] = Math.round(Math.random() * canvas.width);
         zombies[i]["y"] = canvas.height-105;
@@ -119,6 +132,14 @@
                 players[i].upPressed = false;
                 players[i].downPressed = true;
             }
+            if (e.keyCode === players[i].keys.shoot) {
+                if(shotInAir === false) {
+                    players[i].shotInAir = true;
+                    players[i]["bullet"]["x"] = players[i].x;
+                    players[i]["bullet"]["y"] = players[i].y;
+                    players[i]["bullet"]["direction"] = players[i].direction;
+                }
+            }
         }
     }
     function keyUpHandler(e) {
@@ -146,7 +167,13 @@
             x = relativeX - y/2;
         }
     }*/
-    //Fart
+    function changePlatform(platNum, x, y, w, h, color) {
+        plats[platNum]["x"] = x;
+        plats[platNum]["y"] = y;
+        plats[platNum]["width"] = w;
+        plats[platNum]["height"] = h;
+        plats[platNum]["color"] = color;
+    }
     function drawEnvironment(){
         // draws Environment, as of now just rectangles around canvas
         ctx.beginPath();
@@ -158,15 +185,22 @@
         ctx.fill();
         ctx.closePath();
         ctx.beginPath();
-        var plat1 = ctx.rect(0, canvas.height * (2/3), canvas.width/6, 15);
-        var plat2 = ctx.rect(canvas.width * (5/6), canvas.height * (5/6), canvas.width/6, 15);
-        var plat3 = ctx.rect(canvas.width * (7/12), canvas.height * (1/2), canvas.width/6, 15);
-        var plat4 = ctx.rect(canvas.width * (3/12), canvas.height * (1/3), canvas.width/6, 15);
+        changePlatform(0, 0, canvas.height * (2/3), canvas.width/6, 15, "#000000");
+
+        for(var i = 0; i < platNum; i++) {
+            ctx.fillStyle = plats[platNum][color];
+            ctx.fillRect(plats[platNum].x, plats[platNum].y, plats[platNum].width, plats[platNum].height);
+        }
+
+        //var plat1 = ctx.rect(0, canvas.height * (2/3), canvas.width/6, 15);
+        //var plat2 = ctx.rect(canvas.width * (5/6), canvas.height * (5/6), canvas.width/6, 15);
+        //var plat3 = ctx.rect(canvas.width * (7/12), canvas.height * (1/2), canvas.width/6, 15);
+        //var plat4 = ctx.rect(canvas.width * (3/12), canvas.height * (1/3), canvas.width/6, 15);
        //var box = ctx.rect(canvas.width * (7/12), canvas.height * (1/2) - 50, 50, 50);
         ctx.fillStyle = "#474747";
         ctx.fill();
         ctx.closePath();
-        var objects = [ground, leftWall, rightWall, ceiling, plat1, plat2, plat3, plat4];
+        var objects = [ground, leftWall, rightWall, ceiling];
         return objects;
     }
     function drawPlayers() {
@@ -208,6 +242,19 @@
             ctx.lineTo(players[i].x, players[i].y + playerHeight * 2 / 5);
             ctx.moveTo(players[i].x + playerWidth / 2, players[i].y + playerHeight * 3 / 5);
             ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight * 2 / 5);
+
+            // Draw Bullet
+            if(players[i].shotInAir && players[i].direction === "RIGHT") {
+                players[i]["bullet"]["velocity"] = 1;
+                ctx.moveTo(players[i].bullet.x+40, players[i].bullet.y+30);
+                ctx.fillRect(players[i].bullet.x+40, players[i].bullet.y+30, 20, 10);
+            }
+            if(players[i].shotInAir && players[i].direction === "LEFT") {
+                players[i]["bullet"]["velocity"] = -1;
+                ctx.moveTo(players[i].bullet.x-20, players[i].bullet.y+30);
+                ctx.fillRect(players[i].bullet.x-20, players[i].bullet.y+30, 20, 10);
+            }
+
             ctx.stroke();
             ctx.strokeStyle = players[i].color;
             ctx.stroke();
@@ -227,7 +274,7 @@
                 ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
             }
             if (zombies[i].direction === "left") {
-                ctx.rect(zombies[i].x + zombieWidth, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
+                ctx.rect(zombies[i].x, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
             }
             //Body
             ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10);
@@ -246,6 +293,7 @@
     function gravityChange(){
         // uses gravity variables to create gravity
         for(var i = 0; i < playerNum; i++) {
+            players[i]["bullet"]["x"] += players[i].bullet.velocity;
             if(players[i].gravitySpeed>1){
                 players[i].direction2 = "DOWN";
             }
@@ -253,6 +301,7 @@
             players[i].gravitySpeed += gravity;
         }
     }
+
     function playerLocation(){
         for(var i = 0; i < playerNum; i++) {
             if (players[i].rightPressed) {
@@ -286,6 +335,9 @@
             }
             if (players[i].x + 6 + playerWidth > canvas.width) {
                 players[i].x = canvas.width - playerWidth - 6;
+            }
+            for(var j = 0; j < platNum; j++) {
+                if(players[i].y + playerHeight > plats[platNum].x);
             }
             if (players[i].y + playerHeight + 6 > canvas.height) {
                 players[i].y = canvas.height - playerHeight - 6;
@@ -345,7 +397,7 @@
             ctx.font = "20px TimesRoman";
             ctx.fillText(players[i].hp, 15 + players[i].hp, 22 + 25*i);
             ctx.stroke();
-            ctx.strokeStyle = "#00ff00";
+            ctx.strokeStyle = playerColors[i];
             ctx.stroke();
             ctx.closePath();
         }
