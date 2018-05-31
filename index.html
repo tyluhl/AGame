@@ -143,11 +143,11 @@
                 players[i].downPressed = true;
             }
             if (e.keyCode === players[i].keys.shoot) {
-                if(shotInAir === false) {
-                    players[i].shotInAir = true;
+                if(!players[i].shotInAir) {
                     players[i]["bullet"]["x"] = players[i].x;
                     players[i]["bullet"]["y"] = players[i].y;
                     players[i]["bullet"]["direction"] = players[i].direction;
+                    players[i].shotInAir = true;
                 }
             }
         }
@@ -245,12 +245,12 @@
             ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight * 2 / 5);
 
             // Draw Bullet
-            if(players[i].shotInAir && players[i].direction === "RIGHT") {
+            if(players[i].shotInAir && players[i].bullet.direction === "RIGHT") {
                 players[i]["bullet"]["velocity"] = 1;
                 ctx.moveTo(players[i].bullet.x+40, players[i].bullet.y+30);
                 ctx.fillRect(players[i].bullet.x+40, players[i].bullet.y+30, 20, 10);
             }
-            if(players[i].shotInAir && players[i].direction === "LEFT") {
+            if(players[i].shotInAir && players[i].bullet.direction === "LEFT") {
                 players[i]["bullet"]["velocity"] = -1;
                 ctx.moveTo(players[i].bullet.x-20, players[i].bullet.y+30);
                 ctx.fillRect(players[i].bullet.x-20, players[i].bullet.y+30, 20, 10);
@@ -309,6 +309,7 @@
         // uses gravity variables to create gravity
         for(var i = 0; i < playerNum; i++) {
             players[i]["bullet"]["x"] += players[i].bullet.velocity;
+
             if(players[i].gravitySpeed>1){
                 players[i].direction2 = "DOWN";
             }
