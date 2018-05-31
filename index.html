@@ -16,16 +16,6 @@
     //  create canvas
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
-    var plat1 = {};
-    var plat2 = {};
-    var plat3 = {};
-    var plat4 = {};
-    var plat5 = {};
-    var plat6 = {};
-    var plat7 = {};
-    var plat8 = {};
-    var plat9 = {};
-    var plat10 = {};
     var zombie1 = {};
     var zombie2 = {};
     var zombie3 = {};
@@ -40,8 +30,6 @@
     var player2 = {};
     var player3 = {};
     var player4 = {};
-    var plats = [plat1, plat2, plat3, plat4, plat5, plat6, plat7, plat8, plat9, plat10];
-    var platNum = 4;
     var zombies = [zombie1, zombie2, zombie3, zombie4, zombie5, zombie6, zombie7, zombie8, zombie9, zombie10];
     var zombieNum = 5;
     var players = [player1, player2, player3, player4];
@@ -59,14 +47,9 @@
     var jump = 5;
     var jumpCount = 0;
     var playerColors = ["#ff0000", "#ff00ff", "#00ffff", "#ffff00"];
+    const bulletVelocity = 5;
     // appends attributes to each player
-    for(var i = 0; i < platNum; i++) {
-        plats[i]["x"] = 0;
-        plats[i]["y"] = 0;
-        plats[i]["width"] = 0;
-        plats[i]["height"] = 0;
-        plats[i]["color"] = 0;
-    }
+
     for(var i = 0; i < playerNum; i++) {
         players[i]["color"] = playerColors[i];
         //colors.splice(colors.indexOf(players[i].color), 1);
@@ -91,12 +74,15 @@
         players[i]["keys"]["up"] = keys[i][3];
         players[i]["keys"]["shoot"] = keys[i][4];
         players[i]["touchingZombie"] = false;
+        players[i]["bullets"] = [];
+        /*
         players[i]["shotInAir"] = false;
         players[i]["bullet"] = {};
         players[i]["bullet"]["x"] = players[i].x;
         players[i]["bullet"]["y"] = players[i].y;
         players[i]["bullet"]["velocity"] = 1;
         players[i]["bullet"]["direction"] = "RIGHT";
+        */
     }
     for(var i = 0; i < zombieNum; i++) {
         zombies[i]["damage"] = 10;
@@ -115,6 +101,12 @@
         this.y = y;
         this.width = width;
         this.height = height;
+    }
+
+    function Bullet(x, y, direction){
+        this.x = x;
+        this.y = y;
+        this.direction = direction;
     }
 
     // allows to take key input
@@ -143,12 +135,14 @@
                 players[i].downPressed = true;
             }
             if (e.keyCode === players[i].keys.shoot) {
-                if(!players[i].shotInAir) {
+                players[i].push(new Bullet(players[i].x, players[i].y, players[i].direction));
+                /*if(!players[i].shotInAir) {
                     players[i]["bullet"]["x"] = players[i].x;
                     players[i]["bullet"]["y"] = players[i].y;
                     players[i]["bullet"]["direction"] = players[i].direction;
                     players[i].shotInAir = true;
                 }
+                */
             }
         }
     }
@@ -245,6 +239,7 @@
             ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight * 2 / 5);
 
             // Draw Bullet
+            /*
             if(players[i].shotInAir && players[i].bullet.direction === "RIGHT") {
                 players[i]["bullet"]["velocity"] = 1;
                 ctx.moveTo(players[i].bullet.x+40, players[i].bullet.y+30);
@@ -255,8 +250,8 @@
                 ctx.moveTo(players[i].bullet.x-20, players[i].bullet.y+30);
                 ctx.fillRect(players[i].bullet.x-20, players[i].bullet.y+30, 20, 10);
             }
+            */
 
-            ctx.stroke();
             ctx.strokeStyle = players[i].color;
             ctx.stroke();
             ctx.closePath();
@@ -302,19 +297,35 @@
             ctx.stroke();
             ctx.closePath();
         }
-
-
     }
+
+    function drawBullets(){
+        for(var i = 0; i < playerNum; i++){
+            for(var j = 0; j < players[i].bullets.length; j++){
+                ctx.beginPath();
+
+            }
+        }
+    }
+
     function gravityChange(){
         // uses gravity variables to create gravity
         for(var i = 0; i < playerNum; i++) {
-            players[i]["bullet"]["x"] += players[i].bullet.velocity;
+            // players[i]["bullet"]["x"] += players[i].bullet.velocity;
 
             if(players[i].gravitySpeed>1){
                 players[i].direction2 = "DOWN";
             }
             players[i].y += players[i].gravitySpeed;
             players[i].gravitySpeed += gravity;
+        }
+    }
+
+    function moveBullet(){
+        for(var i = 0; i < playerNum; i++){
+            for(var j = 0; j < players[i].bullets.length; j++){
+                players[i].bullets[j].x += bulletVelocity;
+            }
         }
     }
 
@@ -428,6 +439,7 @@
         drawPlayers();
         updateZombies();
         drawZombies();
+        drawBullets();
         drawEnvironment();
     }
     // calls draw
