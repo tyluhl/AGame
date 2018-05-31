@@ -106,7 +106,7 @@
         zombies[i]["size"] = 1;
         zombies[i]["direction"] = "right";
         zombies[i]["hp"] = 50;
-        zombies[i]["x"] = Math.round(Math.random() * canvas.width);
+        zombies[i]["x"] = Math.round((Math.random() * canvas.width) - 100) + 50;
         zombies[i]["y"] = canvas.height-105;
         zombies[i]["dx"] = 2 * Math.pow(-1, i);
         if(zombies[i].dx<0) zombies[i]["direction"] = "left";
@@ -282,6 +282,7 @@
     }
 
     function drawZombies() {
+        //alert(zombieNum);
         for(var i = 0; i < zombieNum; i++) {
             if(zombies[i].hp > 0) {
                 ctx.beginPath();
@@ -336,6 +337,7 @@
                     for(var j = 0; j < zombieNum; j++) {
                         zombies[j]["hp"] = 50 + 10*(level-1);
                     }
+                    alert(zombieNum);
                     alert(zombies[0].hp);
                     alert(zombies[1].hp);
                     alert(zombies[2].hp);
