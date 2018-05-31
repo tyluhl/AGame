@@ -16,6 +16,7 @@
     //  create canvas
     var canvas = document.getElementById("myCanvas");
     var ctx = canvas.getContext("2d");
+    var level = 1;
     var plat1 = {};
     var plat2 = {};
     var plat3 = {};
@@ -82,6 +83,7 @@
         players[i]["y"] = Math.round(Math.random() * canvas.height);
         players[i]["speed"] = 1;
         players[i]["hp"] = 100;
+        players[i]["shield"] = 100;
         players[i]["direction"] = "CENTER";
         players[i]["direction2"] = "STILL";
         players[i]["keys"] = {};
@@ -244,14 +246,16 @@
             ctx.moveTo(players[i].x + playerWidth / 2, players[i].y + playerHeight * 3 / 5);
             ctx.lineTo(players[i].x + playerWidth, players[i].y + playerHeight * 2 / 5);
 
+            ctx.strokeStyle = players[i].color;
+
             // Draw Bullet
-            if(players[i].shotInAir && players[i].bullet.direction === "RIGHT") {
-                players[i]["bullet"]["velocity"] = 1;
+            if(players[i].shotInAir && (players[i].bullet.direction === "RIGHT" || players[i].bullet.direction === "CENTER")) {
+                players[i]["bullet"]["velocity"] = 2;
                 ctx.moveTo(players[i].bullet.x+40, players[i].bullet.y+30);
                 ctx.fillRect(players[i].bullet.x+40, players[i].bullet.y+30, 20, 10);
             }
             if(players[i].shotInAir && players[i].bullet.direction === "LEFT") {
-                players[i]["bullet"]["velocity"] = -1;
+                players[i]["bullet"]["velocity"] = -2;
                 ctx.moveTo(players[i].bullet.x-20, players[i].bullet.y+30);
                 ctx.fillRect(players[i].bullet.x-20, players[i].bullet.y+30, 20, 10);
             }
@@ -279,28 +283,30 @@
 
     function drawZombies() {
         for(var i = 0; i < zombieNum; i++) {
-            ctx.beginPath();
-            ctx.lineWidth = 3;
-            //Head
-            ctx.moveTo(zombies[i].x + zombieWidth / 5, zombies[i].y);
-            ctx.rect(zombies[i].x + zombieWidth / 5, zombies[i].y, zombieWidth * 3 / 5, zombieHeight / 5);
-            //Arms
-            if (zombies[i].direction === "right") {
-                ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
+            if(zombies[i].hp > 0) {
+                ctx.beginPath();
+                ctx.lineWidth = 3;
+                //Head
+                ctx.moveTo(zombies[i].x + zombieWidth / 5, zombies[i].y);
+                ctx.rect(zombies[i].x + zombieWidth / 5, zombies[i].y, zombieWidth * 3 / 5, zombieHeight / 5);
+                //Arms
+                if (zombies[i].direction === "right") {
+                    ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight / 5, zombieWidth * 5 / 6, zombieHeight / 10);
+                }
+                if (zombies[i].direction === "left") {
+                    ctx.rect(zombies[i].x, zombies[i].y + zombieHeight / 5, zombieWidth * 5 / 6, zombieHeight / 10);
+                }
+                //Body
+                ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3 / 10);
+                ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3 / 10, zombieWidth * 2 / 3, zombieHeight * 3 / 10);
+                //Legs
+                ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3 / 5, zombieWidth / 3, zombieHeight * 2 / 5);
+                ctx.rect(zombies[i].x + zombieWidth / 2, zombies[i].y + zombieHeight * 3 / 5, zombieWidth / 3, zombieHeight * 2 / 5);
+                ctx.stroke();
+                ctx.strokeStyle = "#00ff00";
+                ctx.stroke();
+                ctx.closePath();
             }
-            if (zombies[i].direction === "left") {
-                ctx.rect(zombies[i].x, zombies[i].y + zombieHeight / 5, zombieWidth * 5/6, zombieHeight / 10);
-            }
-            //Body
-            ctx.moveTo(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10);
-            ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/10, zombieWidth * 2 / 3, zombieHeight * 3 / 10);
-            //Legs
-            ctx.rect(zombies[i].x + zombieWidth / 6, zombies[i].y + zombieHeight * 3/5, zombieWidth / 3, zombieHeight * 2/5);
-            ctx.rect(zombies[i].x + zombieWidth / 2, zombies[i].y + zombieHeight * 3/5, zombieWidth / 3, zombieHeight * 2/5);
-            ctx.stroke();
-            ctx.strokeStyle = "#00ff00";
-            ctx.stroke();
-            ctx.closePath();
         }
 
 
@@ -308,8 +314,37 @@
     function gravityChange(){
         // uses gravity variables to create gravity
         for(var i = 0; i < playerNum; i++) {
-            players[i]["bullet"]["x"] += players[i].bullet.velocity;
-
+            //Bullet Change
+            if(players[i].shotInAir) {
+                players[i]["bullet"]["x"] += players[i].bullet.velocity;
+                if (players[i].bullet.x > canvas.width || players[i].bullet.x < 0) {
+                    players[i]["shotInAir"] = false;
+                }
+                for (var j = 0; j < zombieNum; j++) {
+                    if (zombies[j].x + zombieWidth >= players[i].bullet.x && zombies[j].x <= players[i].bullet.x + 20
+                        && zombies[j].y + zombieHeight >= players[i].bullet.y && zombies[j].y <= players[i].bullet.y + 10
+                        && zombies[j].hp > 0) {
+                        players[i]["shotInAir"] = false;
+                        zombies[j]["hp"] -= 10;
+                    }
+                }
+                if(levelComplete()) {
+                    level++;
+                    if(zombieNum < 10) {
+                        zombieNum ++;
+                    }
+                    for(var j = 0; j < zombieNum; j++) {
+                        zombies[j]["hp"] = 50 + 10*(level-1);
+                    }
+                    alert(zombies[0].hp);
+                    alert(zombies[1].hp);
+                    alert(zombies[2].hp);
+                    alert(zombies[3].hp);
+                    alert(zombies[4].hp);
+                    alert(zombies[5].hp);
+                }
+            }
+            //Gravity Change
             if(players[i].gravitySpeed>1){
                 players[i].direction2 = "DOWN";
             }
@@ -392,12 +427,20 @@
             players[i].touchingZombie = false;
             for(var j = 0; j < zombieNum; j++) {
                 if(zombies[j].x + zombieWidth >= players[i].x && zombies[j].x <= players[i].x + playerWidth
-                && zombies[j].y + zombieHeight >= players[i].y && zombies[j].y <= players[i].y + playerHeight) {
+                && zombies[j].y + zombieHeight >= players[i].y && zombies[j].y <= players[i].y + playerHeight && zombies[j].hp > 0) {
                     players[i].touchingZombie = true;
-                    if (players[i].hp > 0) {
+                    if (players[i].shield > 0) {
+                        players[i].shield -= 1;
+                    }
+                    else if (players[i].hp > 0) {
                         players[i].hp -= 1;
                     }
                     break;
+                }
+            }
+            if(!players[i].touchingZombie) {
+                if(players[i].shield < 100 && Math.round(Math.random() * 10) === 1 && players[i].hp !== 0) {
+                    players[i].shield += 1;
                 }
             }
         }
@@ -408,15 +451,25 @@
             ctx.beginPath();
             ctx.lineWidth = 3;
             if (players[i].hp > 0) {
-                ctx.rect(10, 10 + 25 * i, players[i].hp, 10);
+                ctx.rect(10, 10 + 35 * i, players[i].shield, 10);
+                ctx.rect(10, 20 + 35 * i, players[i].hp, 10);
             }
-            ctx.font = "20px TimesRoman";
-            ctx.fillText(players[i].hp, 15 + players[i].hp, 22 + 25*i);
+            ctx.font = "14px TimesRoman";
+            ctx.fillText(players[i].shield, 25 + players[i].shield, 17 + 35*i);
+            ctx.fillText(players[i].hp, 25 + players[i].hp, 35 + 35*i);
             ctx.stroke();
             ctx.strokeStyle = playerColors[i];
             ctx.stroke();
             ctx.closePath();
         }
+    }
+
+    function levelComplete() {
+        var sum = 0;
+        for(var i = 0; i < zombieNum; i++) {
+            sum += zombies[i].hp;
+        }
+        return sum <= 0;
     }
 
     function draw() {
