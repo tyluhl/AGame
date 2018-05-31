@@ -84,7 +84,7 @@
         players[i]["bullet"]["velocity"] = 1;
         players[i]["bullet"]["direction"] = "RIGHT";
     }
-    for(var i = 0; i < zombieNum; i++) {
+    for(var i = 0; i < 10; i++) {
         zombies[i]["damage"] = 10;
         zombies[i]["speed"] = 1;
         zombies[i]["size"] = 1;
@@ -320,13 +320,6 @@
                     for(var j = 0; j < zombieNum; j++) {
                         zombies[j]["hp"] = 50 + 10*(level-1);
                     }
-                    alert(zombieNum);
-                    alert(zombies[0].hp);
-                    alert(zombies[1].hp);
-                    alert(zombies[2].hp);
-                    alert(zombies[3].hp);
-                    alert(zombies[4].hp);
-                    alert(zombies[5].hp);
                 }
             }
             //Gravity Change
@@ -424,7 +417,7 @@
                 }
             }
             if(!players[i].touchingZombie) {
-                if(players[i].shield < 100 && Math.round(Math.random() * 10) === 1 && players[i].hp !== 0) {
+                if(players[i].shield < 100 && Math.round(Math.random() * 25) === 1 && players[i].hp !== 0) {
                     players[i].shield += 1;
                 }
             }
