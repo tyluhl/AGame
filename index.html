@@ -102,13 +102,21 @@
         zombies[i]["damage"] = 10;
         zombies[i]["speed"] = 1;
         zombies[i]["size"] = 1;
-        zombies[i]["direction"] = "left";
+        zombies[i]["direction"] = "right";
         zombies[i]["hp"] = 50;
         zombies[i]["x"] = Math.round(Math.random() * canvas.width);
         zombies[i]["y"] = canvas.height-105;
         zombies[i]["dx"] = 2 * Math.pow(-1, i);
         if(zombies[i].dx<0) zombies[i]["direction"] = "left";
     }
+
+    function Platform(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+
     // allows to take key input
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
@@ -169,13 +177,7 @@
             x = relativeX - y/2;
         }
     }*/
-    function changePlatform(platNum, x, y, w, h, color) {
-        plats[platNum]["x"] = x;
-        plats[platNum]["y"] = y;
-        plats[platNum]["width"] = w;
-        plats[platNum]["height"] = h;
-        plats[platNum]["color"] = color;
-    }
+
     function drawEnvironment(){
         // draws Environment, as of now just rectangles around canvas
         ctx.beginPath();
@@ -187,18 +189,20 @@
         ctx.fill();
         ctx.closePath();
         ctx.beginPath();
-        changePlatform(0, 0, canvas.height * (2/3), canvas.width/6, 15, "#000000");
+        var plat1 = new Platform(0, canvas.height * (2/3), canvas.width/6, 15);
+        var plat2 = new Platform(canvas.width * (5/6), canvas.height * (3/4), canvas.width/6, 15);
+        var plat3 = new Platform(canvas.width * (7/12), canvas.height * (1/2), canvas.width/6, 15);
+        var plat4 = new Platform(canvas.width * (3/12), canvas.height * (1/3), canvas.width/6, 15);
 
-        var plat1 = ctx.rect(0, canvas.height * (2/3), canvas.width/6, 15);
-        var plat2 = ctx.rect(canvas.width * (5/6), canvas.height * (3/4), canvas.width/6, 15);
-        var plat3 = ctx.rect(canvas.width * (7/12), canvas.height * (1/2), canvas.width/6, 15);
-        var plat4 = ctx.rect(canvas.width * (3/12), canvas.height * (1/3), canvas.width/6, 15);
-        var box = ctx.rect(canvas.width * (7/12), canvas.height * (1/2) - 50, 50, 50);
+
+        var platforms = [plat1, plat2, plat3, plat4];
+        for(var i = 0; i < platforms.length; i++) {
+            ctx.rect(platforms[i].x, platforms[i].y, platforms[i].width, platforms[i].height);
+        }
         ctx.fillStyle = "#474747";
         ctx.fill();
         ctx.closePath();
-        var objects = [ground, leftWall, rightWall, ceiling];
-        return objects;
+        return platforms;
     }
     function drawPlayers() {
         // draws the player's sprites
@@ -347,9 +351,7 @@
             if (players[i].x + 6 + playerWidth > canvas.width) {
                 players[i].x = canvas.width - playerWidth - 6;
             }
-            for(var j = 0; j < platNum; j++) {
-                if(players[i].y + playerHeight > plats[platNum].x);
-            }
+
             if (players[i].y + playerHeight + 6 > canvas.height) {
                 players[i].y = canvas.height - playerHeight - 6;
                 players[i].jumpCount = 0;
@@ -364,24 +366,26 @@
         }
     }
     // collision detection function, still needs lots of progress
-    /*
+
         function collisionDetection(objects){
-            for(var i = 0; i < objects.length; i++){
-                if(player1.x-6<i.width){
+        for(var i = 0; j < players.length; i++) {
+            for (var j = 0; j < objects.length; j++) {
+                if (player1.x - 6 < i.width) {
                     player1.x = 6;
                 }
-                if(player1.x+6+playerWidth>canvas.width){
-                    player1.x = canvas.width - playerWidth -6;
+                if (player1.x + 6 + playerWidth > canvas.width) {
+                    player1.x = canvas.width - playerWidth - 6;
                 }
-                if(player1.y+playerHeight+6>canvas.height){
+                if (player1.y + playerHeight + 6 > canvas.height) {
                     player1.y = canvas.height - playerHeight - 6;
                 }
-                if(player1.y-6<0){
+                if (player1.y - 6 < 0) {
                     player1.y = 6;
                 }
             }
         }
-        */
+        }
+
     function zombieDetection() {
         for(var i = 0; i < playerNum; i++) {
             players[i].touchingZombie = false;
